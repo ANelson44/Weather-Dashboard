@@ -54,7 +54,7 @@ body {
     justify-content: center;
   }
   .weather-input .separator::before{
-    content: "or";
+    content: "Recent Searches";
     color: #6C757D;
     font-size: 1.18rem;
     padding: 0 15px;
@@ -72,6 +72,7 @@ body {
     color: #fff;
     background: var(--main-bg-color);
     transition: 0.2s ease;
+    margin-bottom: 1rem;
   }
   .weather-input .search-btn:hover {
     background: #1846ff;
