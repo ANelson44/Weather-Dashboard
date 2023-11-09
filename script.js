@@ -7,9 +7,13 @@ const weatherCardsDiv = document.querySelector(".weather-cards");
 const API_KEY = "5c77dbfb9dba4b1a1b34f2cbc1ca6a46";
 
 const createWeatherCard = (cityName, weatherItem, index) => {
+    const date = new Date(weatherItem.dt * 1000);
+    const options = { weekday: 'short', month: 'numeric', day: 'numeric', year: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+
     if(index === 0) { // HTML for the main weather card
         return `<div class="details">
-                    <h2>${cityName} (${weatherItem.dt_txt.split(" ")[0]})</h2>
+                    <h2>${cityName} (${formattedDate})</h2>
                     <h6>Temperature: ${(weatherItem.main.temp).toFixed(0)}°F</h6>
                     <h6>Wind: ${(weatherItem.wind.speed).toFixed(0)} mph</h6>
                     <h6>Humidity: ${weatherItem.main.humidity}%</h6>
@@ -20,7 +24,7 @@ const createWeatherCard = (cityName, weatherItem, index) => {
                 </div>`;
     } else { // HTML for the other five day forecast card
         return `<li class="card">
-                    <h3>(${weatherItem.dt_txt.split(" ")[0]})</h3>
+                    <h3>(${formattedDate})</h3>
                     <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png" alt="weather-icon">
                     <h6>Temp: ${(weatherItem.main.temp).toFixed(0)}°F</h6>
                     <h6>Wind: ${(weatherItem.wind.speed).toFixed(0)} mph</h6>
@@ -42,6 +46,11 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
             }
         });
 
+        // Save the search data to local storage
+        const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        searchHistory.push({ cityName, latitude, longitude });
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+
         // Clearing previous weather data
         cityInput.value = "";
         currentWeatherDiv.innerHTML = "";
@@ -58,6 +67,24 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
         });        
     }).catch(() => {
         alert("An error occurred while fetching the weather forecast!");
+    });
+}
+
+const displaySearchHistory = () => {
+    const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+    const searchHistoryDiv = document.querySelector(".search-history");
+
+    searchHistoryDiv.innerHTML = "";
+
+    const startIndex = Math.max(0, searchHistory.length - 6);
+    const recentSearches = searchHistory.slice(startIndex);
+
+    recentSearches.forEach((search, index) => {
+        const { cityName, latitude, longitude } = search;
+        const searchButton = document.createElement("button");
+        searchButton.textContent = `${cityName}`;
+        searchButton.addEventListener("click", () => getWeatherDetails(cityName, latitude, longitude));
+        searchHistoryDiv.appendChild(searchButton);
     });
 }
 
@@ -97,6 +124,8 @@ const getUserCoordinates = () => {
             }
         });
 }
+
+displaySearchHistory();
 
 locationButton.addEventListener("click", getUserCoordinates);
 searchButton.addEventListener("click", getCityCoordinates);
