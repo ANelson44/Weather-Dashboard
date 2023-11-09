@@ -7,7 +7,7 @@ const weatherCardsDiv = document.querySelector(".weather-cards");
 const API_KEY = "5c77dbfb9dba4b1a1b34f2cbc1ca6a46";
 
 const createWeatherCard = (cityName, weatherItem, index) => {
-    const date = new Date(weatherItem.dt * 1000);
+    const date = new Date(weatherItem.dt * 1000); 
     const options = { weekday: 'short', month: 'numeric', day: 'numeric', year: 'numeric' };
     const formattedDate = date.toLocaleDateString('en-US', options);
 
