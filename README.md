@@ -7,7 +7,7 @@ This is a weather dashboard built with HTML, CSS, and JavaScript. Data is collec
 
 ## Installation
 
-Follow the link to see the page! ==> 
+Follow the link to see the page! ==> https://anelson44.github.io/weather-dashboard/
 
 ## Usage
 
